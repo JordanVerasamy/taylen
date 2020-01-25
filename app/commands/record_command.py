@@ -42,7 +42,7 @@ class RecordCommand:
         logger.info("")
 
     @staticmethod
-    def handle_slack(client: SlackClient, event: dict, emoji_name: str, detail_level: str):
+    def handle_slack(client: SlackClient, event: dict, emoji_name: str, detail_level: str = None):
         logger.info(f"[emoji_name={emoji_name}]")
         try:
             emoji = Emoji.objects.get(name=emoji_name)
