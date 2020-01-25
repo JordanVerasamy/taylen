@@ -27,6 +27,10 @@ class Emoji(models.Model):
         ties = self.first_emojis.filter(tied=True).count() + self.second_emojis.filter(tied=True).count()
         return wins, losses, ties
 
+    def defeated(self):
+        return self.winning_matches.values_list('loser')
+    end
+
     def __str__(self):
         return f':{self.name}:'
 

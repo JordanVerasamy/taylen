@@ -11,13 +11,15 @@ help_message = """```
 The bot will respond with the given emoji's record in the form {wins} {losses} {ties}.
 
 Usage: 
-> .record <emoji>
+> .record <emoji> <detail_level>
 
 Arguments:
 - emoji: an emoji
+- detail_level: either nothing or "full"
 
 Examples:
 > .record :simple_smile:
+> .record :simple_smile: full
 ```"""
 
 number_map = {
@@ -40,12 +42,16 @@ class RecordCommand:
         logger.info("")
 
     @staticmethod
-    def handle_slack(client: SlackClient, event: dict, emoji_name: str):
+    def handle_slack(client: SlackClient, event: dict, emoji_name: str, detail_level: str):
         logger.info(f"[emoji_name={emoji_name}]")
         try:
             emoji = Emoji.objects.get(name=emoji_name)
+            if detail_level == 'full':
+                full_record = f" Defeated: {" ".join(emoji.defeated())}"
+            else:
+                full_record = ""
             wins, losses, ties = emoji.record()
             client.post_message(event, f"{number_map.get(wins, wins)} {number_map.get(losses, losses)}"
-                                       f" {number_map.get(ties, ties)}")
+                                       f" {number_map.get(ties, ties)} {full_record}")
         except ObjectDoesNotExist:
             client.post_message(event, 'Could not found that emoji sry')
