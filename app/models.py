@@ -33,6 +33,9 @@ class Emoji(models.Model):
     def defeated(self):
         return [str(match.loser) for match in self.winning_matches.all()]
 
+    def defeated_by(self):
+        return [str(match.winner) for match in self.losing_matches.all()]
+
     def __str__(self):
         return f':{self.name}:'
 
