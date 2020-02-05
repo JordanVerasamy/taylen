@@ -51,4 +51,4 @@ class RecordCommand:
             client.post_message(event, f"{number_map.get(wins, wins)} {number_map.get(losses, losses)}"
                                        f" {number_map.get(ties, ties)} {full_record}")
         except ObjectDoesNotExist:
-            client.post_message(event, 'Could not find that emoji, sorry.')
+            client.post_message(event, 'Could not found that emoji, sry')
