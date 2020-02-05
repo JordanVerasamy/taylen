@@ -10,7 +10,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Emoji)
 class EmojiAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'record')
+    list_display = ('__str__', 'image_url', 'record')
 
 
 @admin.register(EmojiMatch)

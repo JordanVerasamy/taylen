@@ -12,14 +12,19 @@ class Command(BaseCommand):
         for match in EmojiMatch.objects.filter(winner=None, loser=None, tied=False).all():
             reactions = client.reactions_get(channel=match.slack_channel, timestamp=match.slack_ts)['message'][
                 'reactions']
-            reaction_to_count = {}
+            reaction_to_users = {}
             for reaction in reactions:
-                reaction_to_count[reaction['name']] = reaction['count']
+                reaction_to_users[reaction['name']] = reaction['users']
 
-            first_votes = reaction_to_count[match.first.name]
-            second_votes = reaction_to_count[match.second.name]
+            first_voters = reaction_to_users[match.first.name]
+            first_votes = len(first_voters)
+            second_voters = reaction_to_users[match.second.name]
+            second_votes = len(second_voters)
+
             match.first_votes = first_votes
+            match.first_voters = first_voters
             match.second_votes = second_votes
+            match.second_voters = second_voters
 
             if first_votes > second_votes:
                 winning_emojis.append(match.first)

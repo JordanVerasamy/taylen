@@ -5,15 +5,32 @@ import uuid
 from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponse, HttpRequest, HttpResponseForbidden, JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 from app.bot import handle_slack
+from app.models import Emoji, EmojiMatch
 
 logger = logging.getLogger('default')
 
 
 def ping(request: HttpRequest):
     return HttpResponse("pong")
+
+
+def emoji_tree(request: HttpRequest):
+    # Nodes: {id: 0, "label": "Myriel", "group": 1},
+    # Edges: {"from": 1, "to": 0},
+    nodes = [{
+        'id': str(emoji.id),
+        'label': emoji.name,
+        'shape': 'image',
+        'image': emoji.image_url,
+        'group': 1
+    } for emoji in Emoji.objects.all()]
+    edges = [{"from": str(match.winner.id), "to": str(match.loser.id)} for match in
+             EmojiMatch.objects.exclude(tied=True).exclude(winner=None).exclude(loser=None).all()]
+    return render(request, 'emoji_tree.html', {'nodes': nodes, 'edges': edges})
 
 
 @csrf_exempt

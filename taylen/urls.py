@@ -7,4 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('slack', views.slack, name="slack"),
     path('ping', views.ping, name="ping"),
+    path('', views.emoji_tree, name="emoji_tree"),
 ]
